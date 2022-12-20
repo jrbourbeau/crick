@@ -31,8 +31,24 @@ jobs:
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+
     steps:
       - uses: actions/checkout@v3
+
+      - name: Setup Conda Environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          use-mamba: true
+          channel-priority: strict
+          python-version: "3.9"
+          environment-file: ci/environment-3.9.yaml
+          activate-environment: test-environment
+          auto-activate-base: false
 
       - name: Build sdist
         run: pipx run build --sdist
